@@ -2,6 +2,32 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Web Page</title>
+    <style>
+        /* Your CSS goes here */
+    </style>
+</head>
+<body>
+    <h1>Hello World!</h1>
+    <p>Welcome to the CPIT 405 Code Playground.</p>
+    
+    <div class="container">
+        <button id="demo-btn">Click Me!</button>
+        <div id="output"></div>
+    </div>
+
+    <script>
+        // Your JavaScript goes here
+        document.getElementById('demo-btn').addEventListener('click', function() {
+            document.getElementById('output').innerHTML = 'Button clicked at: ' + new Date().toLocaleTimeString();
+        });
+    </script>
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
     <title>CPIT-405 lab 2</title>
 </head>
 <body>
@@ -66,6 +92,46 @@
         <dt>HTML</dt>
         <dd>The language Rakan is currently mastering.</dd>
     </dl>
+<table>
+  <thead>
+    <tr>
+      <th>Basics</th>
+      <th>Front-end Frameworks</th>
+      <th>Server-side frameworks</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>HTML</td>
+      <td>React</td>
+      <td>Spring</td>
+    </tr>
+    <tr>
+      <td>CSS</td>
+      <td>Angular</td>
+      <td>Django</td>
+    </tr>
+    <tr>
+      <td>JS</td>
+      <td>Vue</td>
+      <td>Laravel</td>
+    </tr>
+  </tbody>
+</table>
+<form action="/login" method="POST">
+  <div>
+    <label for="username">Login:</label>
+    <input type="text" id="username" name="username" required>
+  </div>
+  
+  <div>
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required>
+  </div>
+
+  <input type="submit" value="Login">
+</form>
+
 
 </body>
 </html>
