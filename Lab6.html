@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Playground Project</title>
+    <style>
+        /* CSS Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    color: white;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+h1 {
+    font-size: 3em;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+p {
+    font-size: 1.2em;
+    margin-bottom: 30px;
+    opacity: 0.9;
+}
+
+button {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-size: 16px;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+button:hover {
+    background: #45a049;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+
+#output {
+    margin-top: 20px;
+    padding: 15px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.container {
+    animation: fadeIn 0.8s ease-out;
+}
+    </style>
+</head>
+<body>
+    
+
+    <div class="container">
+        <h2>Lab 06: Voting System</h2>
+
+        <div class="vote-section">
+            <div>
+                <button id="like-btn">Like 👍</button>
+                <p>Likes: <span id="like-count">0</span></p>
+            </div>
+            <div>
+                <button id="dislike-btn">Dislike 👎</button>
+                <p>Dislikes: <span id="dislike-count">0</span></p>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="comment-section">
+            <h3>Comments</h3>
+            <ul id="comment-list"></ul>
+            <input type="text" id="comment-input" placeholder="Type your comment here...">
+            <button id="submit-comment">Post</button>
+        </div>
+
+        <button id="reset-btn">Reset All Data (Clear Cookies)</button>
+    </div>
+
+    <script src="script.js"></script>
+
+
+    <script>
+        // المتغيرات الأساسية
+let likes = 0;
+let dislikes = 0;
+
+// --- وظائف التعامل مع الكوكيز (Cookies) ---
+
+function setCookie(name, value, days = 7) {
+    const date = new Date();
+    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+    document.cookie = `${name}=${value};expires=${date.toUTCString()};path=/`;
+}
+
+function getCookie(name) {
+    const nameEQ = name + "=";
+    const ca = document.cookie.split(';');
+    for(let i=0; i < ca.length; i++) {
+        let c = ca[i].trim();
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+    }
+    return null;
+}
+
+function deleteCookie(name) {
+    document.cookie = name + '=; Max-Age=-99999999; path=/;';
+}
+
+// --- تحديث واجهة المستخدم (DOM Manipulation) ---
+
+function updateUI() {
+    document.getElementById('like-count').innerText = likes;
+    document.getElementById('dislike-count').innerText = dislikes;
+    
+    // منع المستخدم من التصويت مرتين
+    if (getCookie("hasVoted")) {
+        document.getElementById('like-btn').disabled = true;
+        document.getElementById('dislike-btn').disabled = true;
+    } else {
+        document.getElementById('like-btn').disabled = false;
+        document.getElementById('dislike-btn').disabled = false;
+    }
+
+    // إدارة التعليقات المخزنة
+    const savedComment = getCookie("userComment");
+    const list = document.getElementById('comment-list');
+    list.innerHTML = ""; 
+    if (savedComment) {
+        const li = document.createElement('li');
+        li.textContent = "💬 " + savedComment;
+        list.appendChild(li);
+        document.getElementById('submit-comment').disabled = true;
+        document.getElementById('comment-input').disabled = true;
+    } else {
+        document.getElementById('submit-comment').disabled = false;
+        document.getElementById('comment-input').disabled = false;
+    }
+}
+
+// --- معالجة الأحداث (Event Handlers) ---
+
+document.getElementById('like-btn').onclick = () => {
+    likes++;
+    setCookie("likes", likes);
+    setCookie("hasVoted", "true");
+    updateUI();
+};
+
+document.getElementById('dislike-btn').onclick = () => {
+    dislikes++;
+    setCookie("dislikes", dislikes);
+    setCookie("hasVoted", "true");
+    updateUI();
+};
+
+document.getElementById('submit-comment').onclick = () => {
+    const input = document.getElementById('comment-input');
+    if (input.value.trim() !== "") {
+        setCookie("userComment", input.value);
+        input.value = "";
+        updateUI();
+    }
+};
+
+document.getElementById('reset-btn').onclick = () => {
+    deleteCookie("hasVoted");
+    deleteCookie("userComment");
+    deleteCookie("likes");
+    deleteCookie("dislikes");
+    likes = 0;
+    dislikes = 0;
+    alert("Data reset successfully!");
+    updateUI();
+};
+
+// تشغيل الوظائف عند تحميل الصفحة لاستعادة الحالة من الكوكيز
+window.onload = () => {
+    likes = parseInt(getCookie("likes")) || 0;
+    dislikes = parseInt(getCookie("dislikes")) || 0;
+    updateUI();
+};
+    </script>
+</body>
+</html>
