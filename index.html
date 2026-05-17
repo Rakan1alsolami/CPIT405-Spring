@@ -1,26 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
-    <title>My Web Page</title>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unsplash Photo Search</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <p>Rakan Setsr Alsolami (2237111)</p>
-    <span>Section IT1 </span>
-    <ul>
-        <!DOCTYPE html>
-<html>
-  <head>
-    <meta http-equiv="refresh" content="0; url=ass1/index.html" />
-  </head>
-</html>
 
-    </ul>
+    <div class="search-container">
+        <h1>Unsplash Image Search</h1>
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Search for high-res photos...">
+            <select id="methodSelect">
+                <option value="asyncAwait">Fetch (Async/Await)</option>
+                <option value="promises">Fetch (Promises)</option>
+                <option value="xhr">XMLHttpRequest (XHR)</option>
+            </select>
+            <button id="searchBtn">Search</button>
+        </div>
+    </div>
+
+    <div id="imageGrid" class="image-grid"></div>
+
+    <script src="script.js"></script>
 </body>
-
 </html>
-
-
-
-
