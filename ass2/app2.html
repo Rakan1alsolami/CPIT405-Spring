@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>App 2: Country Explorer | Rakan Al-Solami</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .search-area {
+      display: flex;
+      gap: 10px;
+      max-width: 600px;
+      margin: 20px auto;
+    }
+    .search-area input {
+      flex: 1;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+    .countries-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 20px;
+      margin-top: 30px;
+    }
+    .country-card {
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      text-align: center;
+      padding-bottom: 15px;
+    }
+    .country-card img {
+      width: 100%;
+      height: 130px;
+      object-fit: cover;
+      border-bottom: 1px solid #eee;
+    }
+    .country-card h3 {
+      margin: 12px 0 6px 0;
+      font-size: 1.1rem;
+      color: #004d7a;
+      padding: 0 10px;
+    }
+    .country-card p {
+      margin: 4px 0;
+      font-size: 0.88rem;
+      color: #555;
+    }
+    .status-msg {
+      text-align: center;
+      font-weight: bold;
+      margin: 20px;
+      color: #666;
+    }
+    .back-link {
+      display: inline-block;
+      margin-bottom: 15px;
+      color: #004d7a;
+      text-decoration: none;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Global Country Explorer</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="cv.html">CV</a>
+      <a href="labs.html">Labs</a>
+      <a href="myworks.html">My Works</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <a href="myworks.html" class="back-link">← Back to My Works</a>
+    
+    <section>
+      <h2>Search Countries Globally</h2>
+      <p style="text-align:center;">Type a country name (e.g., "Saudi", "Egypt", "Canada") to view real-time data from the REST Countries API.</p>
+      
+      <div class="search-area">
+        <input type="text" id="countryInput" placeholder="Enter country name here..." />
+        <button id="searchBtn">Search</button>
+      </div>
+
+      <div id="statusMessage" class="status-msg"></div>
+      <div id="countriesContainer" class="countries-container"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2026 Rakan Al-Solami - CPIT405 Portfolio</p>
+  </footer>
+
+  <script>
+    const countryInput = document.getElementById('countryInput');
+    const searchBtn = document.getElementById('searchBtn');
+    const countriesContainer = document.getElementById('countriesContainer');
+    const statusMessage = document.getElementById('statusMessage');
+
+    // دالة جلب البيانات من الـ API
+    function searchCountry() {
+      const query = countryInput.value.trim();
+      if (query === '') {
+        alert('Please enter a country name to search!');
+        return;
+      }
+
+      // إعداد واجهة المستخدم لحالة التحميل
+      statusMessage.textContent = 'Fetching connection streams... Please wait.';
+      countriesContainer.innerHTML = '';
+
+      const url = `https://restcountries.com/v3.1/name/${encodeURIComponent(query)}`;
+
+      fetch(url)
+        .then(response => {
+          if (!response.ok) {
+            // في حال عدم العثور على الدولة أو حدوث خطأ من الخادم
+            throw new Error('No matching data found for your query.');
+          }
+          return response.json();
+        })
+        .then(data => {
+          statusMessage.textContent = `${data.length} results successfully retrieved.`;
+          displayCountries(data);
+        })
+        .catch(error => {
+          console.error(error);
+          statusMessage.textContent = 'Error: Unstable connection parameters or invalid query entry.';
+        });
+    }
+
+    // إنشاء وتحقين عناصر الـ DOM لكل دولة
+    function displayCountries(countries) {
+      countriesContainer.innerHTML = '';
+      
+      countries.forEach(country => {
+        const card = document.createElement('div');
+        card.className = 'country-card';
+
+        const flagImg = document.createElement('img');
+        flagImg.src = country.flags.svg || country.flags.png;
+        flagImg.alt = `Flag of ${country.name.common}`;
+
+        const nameH3 = document.createElement('h3');
+        nameH3.textContent = country.name.common;
+
+        const capitalP = document.createElement('p');
+        capitalP.innerHTML = `<strong>Capital:</strong> ${country.capital ? country.capital[0] : 'N/A'}`;
+
+        const regionP = document.createElement('p');
+        regionP.innerHTML = `<strong>Region:</strong> ${country.region}`;
+
+        const popP = document.createElement('p');
+        popP.innerHTML = `<strong>Population:</strong> ${country.population.toLocaleString()}`;
+
+        // ربط الهيكل الداخلي للبطاقة
+        card.appendChild(flagImg);
+        card.appendChild(nameH3);
+        card.appendChild(capitalP);
+        card.appendChild(regionP);
+        card.appendChild(popP);
+
+        // حقن البطاقة في الحاوية الرئيسية
+        countriesContainer.appendChild(card);
+      });
+    }
+
+    // ربط الأحداث بنقرة زر البحث والضغط على Enter في لوحة المفاتيح
+    searchBtn.addEventListener('click', searchCountry);
+    countryInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') searchCountry();
+    });
+  </script>
+</body>
+</html>

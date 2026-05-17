@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact | Rakan Al-Solami</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Contact Me</h1>
+    <nav>
+  <a href="index.html">Home</a>
+  <a href="cv.html">CV</a>
+  <a href="labs.html">Labs & Projects</a>
+  <a href="myworks.html">My Works</a> <a href="contact.html">Contact</a>
+</nav>
+  </header>
+  <main>
+    <section>
+      <h2>Contact Information</h2>
+      <p>Email: <a href="mailto:ralsolami0146@stu.kau.edu.sa">ralsolami0146@stu.kau.edu.sa</a></p>
+      <p>GitHub: <a href="https://github.com/rakan1alsolami" target="_blank">github.com/rakan1alsolami</a></p>
+    </section>
+    <section>
+      <h2>Send a Message</h2>
+
+      <form action="https://api.web3forms.com/submit" method="POST">
+
+        <input type="hidden" name="access_key" value="d708b290-d144-446d-97f2-2cf8a05d3e14">
+        <input type="hidden" name="subject" value="New message from Rakan's portfolio">
+        <input type="hidden" name="redirect" value="https://web3forms.com/success">
+
+        <label for="name">Full Name:</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="email">Your Email:</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="message">Message:</label>
+        <textarea id="message" name="message" rows="5" required></textarea>
+
+        <button type="submit">Send Message</button>
+      </form>
+    </section>
+  </main>
+  <footer>
+    <p>© 2026 Rakan Al-Solami - CPIT405 Portfolio</p>
+  </footer>
+</body>
+</html>

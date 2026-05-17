@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>App 1: To-Do List | Rakan Al-Solami</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .todo-box {
+      max-width: 500px;
+      margin: 20px auto;
+    }
+    .input-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .input-row input {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+    .todo-list {
+      list-style: none;
+      padding: 0;
+    }
+    .todo-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px;
+      background: #f9f9f9;
+      border: 1px solid #eee;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      transition: background 0.2s;
+    }
+    .todo-item.completed span {
+      text-decoration: line-through;
+      color: #888;
+    }
+    .todo-item span {
+      cursor: pointer;
+      flex: 1;
+    }
+    .delete-btn {
+      background-color: #cc0000;
+      padding: 5px 10px;
+      font-size: 0.85rem;
+    }
+    .delete-btn:hover {
+      background-color: #ff3333;
+    }
+    .stats {
+      margin-top: 15px;
+      font-size: 0.9rem;
+      color: #666;
+      text-align: right;
+    }
+    .back-link {
+      display: inline-block;
+      margin-bottom: 15px;
+      color: #004d7a;
+      text-decoration: none;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Interactive To-Do List</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="cv.html">CV</a>
+      <a href="labs.html">Labs</a>
+      <a href="myworks.html">My Works</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <a href="myworks.html" class="back-link">← Back to My Works</a>
+    
+    <section class="todo-box">
+      <h2>Manage Your Daily Tasks</h2>
+      <p>Enter your tasks below. They will be automatically saved directly into your local browser container.</p>
+      
+      <div class="input-row">
+        <input type="text" id="taskInput" placeholder="Add a new task here..." />
+        <button id="addTaskBtn">Add Task</button>
+      </div>
+
+      <ul id="todoList" class="todo-list"></ul>
+      <div id="todoStats" class="stats">0 tasks remaining</div>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2026 Rakan Al-Solami - CPIT405 Portfolio</p>
+  </footer>
+
+  <script>
+    // الإشارات إلى عناصر الـ DOM
+    const taskInput = document.getElementById('taskInput');
+    const addTaskBtn = document.getElementById('addTaskBtn');
+    const todoList = document.getElementById('todoList');
+    const todoStats = document.getElementById('todoStats');
+
+    // تحميل المهام المخزنة مسبقاً أو تعيين مصفوفة فارغة
+    let tasks = JSON.parse(localStorage.getItem('rakanTasks')) || [];
+
+    // دالة لتحديث واجهة المستخدم وإعادة الرسم
+    function renderTasks() {
+      todoList.innerHTML = '';
+      
+      tasks.forEach((task, index) => {
+        const li = document.createElement('li');
+        li.className = `todo-item ${task.completed ? 'completed' : ''}`;
+        
+        const span = document.createElement('span');
+        span.textContent = task.text;
+        // عند الضغط على نص المهمة يتم عكس حالتها (مكتملة / غير مكتملة)
+        span.addEventListener('click', () => toggleTask(index));
+
+        const delBtn = document.createElement('button');
+        delBtn.textContent = 'Delete';
+        delBtn.className = 'delete-btn';
+        delBtn.addEventListener('click', () => deleteTask(index));
+
+        li.appendChild(span);
+        li.appendChild(delBtn);
+        todoList.appendChild(li);
+      });
+
+      // تحديث العداد الإحصائي
+      const remaining = tasks.filter(t => !t.completed).length;
+      todoStats.textContent = `${remaining} task(s) remaining`;
+      
+      // حفظ التغييرات في الـ Local Storage
+      localStorage.setItem('rakanTasks', JSON.stringify(tasks));
+    }
+
+    // إضافة مهمة جديدة
+    function addTask() {
+      const text = taskInput.value.trim();
+      if (text === '') {
+        alert('Please write something before adding!');
+        return;
+      }
+      tasks.push({ text: text, completed: false });
+      taskInput.value = '';
+      renderTasks();
+    }
+
+    // تغيير حالة الاكتمال
+    function toggleTask(index) {
+      tasks[index].completed = !tasks[index].completed;
+      renderTasks();
+    }
+
+    // حذف مهمة
+    function deleteTask(index) {
+      tasks.splice(index, 1);
+      renderTasks();
+    }
+
+    // الاستماع لأحداث الفأرة ولوحة المفاتيح
+    addTaskBtn.addEventListener('click', addTask);
+    taskInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') addTask();
+    });
+
+    // استدعاء الرسم الأولي عند تحميل الصفحة
+    renderTasks();
+  </script>
+</body>
+</html>
